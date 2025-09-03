@@ -1,7 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { Save, Camera } from 'lucide-react';
-import { useData } from '../../contexts/DataContext';
-import { PersonalInfo } from '../../types';
+import React, { useState, useEffect } from "react";
+import { Save, Camera } from "lucide-react";
+import { useData } from "../../contexts/DataContext";
+import { PersonalInfo } from "../../types";
+
+const convertGoogleDriveLink = (url: string) => {
+  try {
+    if (url.includes("drive.google.com")) {
+      // Extract the file ID from the URL
+      const fileId = url.match(/\/d\/(.*?)\/|id=(.*?)(&|$)/)?.[1];
+      if (fileId) {
+        // Use the thumbnail URL format which is more reliable
+        return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+      }
+    }
+    return url;
+  } catch (error) {
+    console.error("Error converting Google Drive link:", error);
+    return url;
+  }
+};
 
 export const PersonalInfoForm: React.FC = () => {
   const { personalInfo, updatePersonalInfo } = useData();
@@ -13,18 +30,30 @@ export const PersonalInfoForm: React.FC = () => {
     setFormData(personalInfo);
   }, [personalInfo]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
+    if (name === "profileImage") {
+      const convertedUrl = convertGoogleDriveLink(value);
+      console.log("Original URL:", value);
+      console.log("Converted URL:", convertedUrl);
+      setFormData((prev) => ({
+        ...prev,
+        [name]: convertedUrl,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    
+
     setTimeout(() => {
       updatePersonalInfo(formData);
       setSaving(false);
@@ -36,7 +65,9 @@ export const PersonalInfoForm: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Personal Information</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+          Personal Information
+        </h2>
         {saved && (
           <div className="text-emerald-600 dark:text-emerald-400 font-medium animate-fade-in">
             Changes saved successfully!
@@ -54,7 +85,14 @@ export const PersonalInfoForm: React.FC = () => {
               <img
                 src={formData.profileImage}
                 alt="Profile preview"
+                crossOrigin="anonymous"
+                referrerPolicy="no-referrer"
                 className="w-16 h-16 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600"
+                onError={(e) => {
+                  console.error("Image failed to load:", formData.profileImage);
+                  e.currentTarget.src = "https://via.placeholder.com/150";
+                }}
+                loading="eager"
               />
               <div className="flex-1">
                 <input
@@ -67,10 +105,17 @@ export const PersonalInfoForm: React.FC = () => {
                 />
               </div>
             </div>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              For Google Drive images, use the sharing link (Make sure the file
+              is set to "Anyone with the link can view")
+            </p>
           </div>
 
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
               Full Name
             </label>
             <input
@@ -85,7 +130,10 @@ export const PersonalInfoForm: React.FC = () => {
           </div>
 
           <div>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label
+              htmlFor="title"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
               Job Title
             </label>
             <input
@@ -100,7 +148,10 @@ export const PersonalInfoForm: React.FC = () => {
           </div>
 
           <div className="md:col-span-2">
-            <label htmlFor="bio" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label
+              htmlFor="bio"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
               Bio
             </label>
             <textarea
@@ -115,7 +166,10 @@ export const PersonalInfoForm: React.FC = () => {
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
               Email
             </label>
             <input
@@ -130,7 +184,10 @@ export const PersonalInfoForm: React.FC = () => {
           </div>
 
           <div>
-            <label htmlFor="location" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label
+              htmlFor="location"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
               Location
             </label>
             <input
@@ -145,7 +202,10 @@ export const PersonalInfoForm: React.FC = () => {
           </div>
 
           <div>
-            <label htmlFor="github" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label
+              htmlFor="github"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
               GitHub URL
             </label>
             <input
@@ -160,7 +220,10 @@ export const PersonalInfoForm: React.FC = () => {
           </div>
 
           <div>
-            <label htmlFor="linkedin" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label
+              htmlFor="linkedin"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
               LinkedIn URL
             </label>
             <input
@@ -175,28 +238,34 @@ export const PersonalInfoForm: React.FC = () => {
           </div>
 
           <div>
-            <label htmlFor="twitter" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label
+              htmlFor="twitter"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
               Twitter URL (Optional)
             </label>
             <input
               type="url"
               id="twitter"
               name="twitter"
-              value={formData.twitter || ''}
+              value={formData.twitter || ""}
               onChange={handleInputChange}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors"
             />
           </div>
 
           <div>
-            <label htmlFor="resumeUrl" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label
+              htmlFor="resumeUrl"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
               Resume Google Drive URL
             </label>
             <input
               type="url"
               id="resumeUrl"
               name="resumeUrl"
-              value={formData.resumeUrl || ''}
+              value={formData.resumeUrl || ""}
               onChange={handleInputChange}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors"
               placeholder="https://drive.google.com/file/d/..."
@@ -214,7 +283,7 @@ export const PersonalInfoForm: React.FC = () => {
             className="flex items-center space-x-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-semibold"
           >
             <Save className="w-5 h-5" />
-            <span>{isLoading ? 'Saving...' : 'Save Changes'}</span>
+            <span>{isLoading ? "Saving..." : "Save Changes"}</span>
           </button>
         </div>
       </form>

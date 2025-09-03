@@ -1,35 +1,46 @@
-import React from 'react';
-import { Github, Linkedin, Mail, Twitter, MapPin, Download, ArrowDown } from 'lucide-react';
-import { useData } from '../../contexts/DataContext';
+import React from "react";
+import {
+  Github,
+  Linkedin,
+  Mail,
+  Twitter,
+  MapPin,
+  Download,
+  ArrowDown,
+} from "lucide-react";
+import { useData } from "../../contexts/DataContext";
 
 export const Hero: React.FC = () => {
   const { personalInfo } = useData();
 
   const socialLinks = [
-    { icon: Github, url: personalInfo.github, label: 'GitHub' },
-    { icon: Linkedin, url: personalInfo.linkedin, label: 'LinkedIn' },
-    { icon: Mail, url: `mailto:${personalInfo.email}`, label: 'Email' },
-    ...(personalInfo.twitter ? [{ icon: Twitter, url: personalInfo.twitter, label: 'Twitter' }] : []),
+    { icon: Github, url: personalInfo.github, label: "GitHub" },
+    { icon: Linkedin, url: personalInfo.linkedin, label: "LinkedIn" },
+    { icon: Mail, url: `mailto:${personalInfo.email}`, label: "Email" },
+    ...(personalInfo.twitter
+      ? [{ icon: Twitter, url: personalInfo.twitter, label: "Twitter" }]
+      : []),
   ];
 
   const handleResumeDownload = () => {
-    if (personalInfo.resumeUrl) {
-      // Convert Google Drive share link to direct download link
-      const fileId = personalInfo.resumeUrl.match(/\/d\/([a-zA-Z0-9-_]+)/)?.[1];
-      if (fileId) {
-        const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
-        const link = document.createElement('a');
-        link.href = downloadUrl;
-        link.download = `${personalInfo.name}_Resume.pdf`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-    }
+    const resumeUrl =
+      "https://raw.githubusercontent.com/nawafmir/resume/c02e50f300fcbba26c541e2fa7abfc339607c6f4/Nawaf_Cv_last.pdf";
+
+    // Create a temporary link element
+    const link = document.createElement("a");
+    link.href = resumeUrl;
+    link.setAttribute("download", "Nawaf_Resume.pdf");
+    link.setAttribute("target", "_blank");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
-    <section id="about" className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 px-4 transition-all duration-500">
+    <section
+      id="about"
+      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 px-4 transition-all duration-500"
+    >
       <div className="max-w-4xl mx-auto text-center">
         <div className="mb-8 animate-fade-in-up">
           <div className="relative inline-block">
@@ -41,19 +52,19 @@ export const Hero: React.FC = () => {
             <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-500/20 to-purple-500/20 animate-pulse"></div>
           </div>
         </div>
-        
+
         <div className="animate-fade-in-up animation-delay-200">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-4 transition-colors">
             {personalInfo.name}
           </h1>
         </div>
-        
+
         <div className="animate-fade-in-up animation-delay-400">
           <h2 className="text-xl sm:text-2xl lg:text-3xl text-blue-600 dark:text-blue-400 font-semibold mb-6 transition-colors">
             {personalInfo.title}
           </h2>
         </div>
-        
+
         <div className="animate-fade-in-up animation-delay-600">
           <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8 leading-relaxed transition-colors">
             {personalInfo.bio}
@@ -66,7 +77,7 @@ export const Hero: React.FC = () => {
             <span>{personalInfo.location}</span>
           </div>
         </div>
-        
+
         <div className="animate-fade-in-up animation-delay-1000">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-8">
             <div className="flex justify-center space-x-4">
