@@ -1,8 +1,15 @@
-import React, { useState } from 'react';
-import { Plus, Edit, Trash2, ExternalLink, Github } from 'lucide-react';
-import { useData } from '../../contexts/DataContext';
-import { ProjectForm } from './ProjectForm';
-import { Project } from '../../types';
+import React, { useState } from "react";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  ExternalLink,
+  Github,
+  FolderOpen,
+} from "lucide-react";
+import { useData } from "../../contexts/DataContext";
+import { ProjectForm } from "./ProjectForm";
+import { Project } from "../../types";
 
 export const ProjectsManager: React.FC = () => {
   const { projects, deleteProject } = useData();
@@ -15,7 +22,7 @@ export const ProjectsManager: React.FC = () => {
   };
 
   const handleDelete = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this project?')) {
+    if (window.confirm("Are you sure you want to delete this project?")) {
       deleteProject(id);
     }
   };
@@ -28,7 +35,9 @@ export const ProjectsManager: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h2 className="text-2xl font-bold text-gray-900">Projects Management</h2>
+        <h2 className="text-2xl font-bold text-gray-900">
+          Projects Management
+        </h2>
         <button
           onClick={() => setShowForm(true)}
           className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
@@ -39,10 +48,7 @@ export const ProjectsManager: React.FC = () => {
       </div>
 
       {showForm && (
-        <ProjectForm
-          project={editingProject}
-          onClose={handleCloseForm}
-        />
+        <ProjectForm project={editingProject} onClose={handleCloseForm} />
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -53,7 +59,7 @@ export const ProjectsManager: React.FC = () => {
           >
             <div className="relative">
               <img
-                src={project.image}
+                src={project.images}
                 alt={project.title}
                 className="w-full h-40 object-cover"
               />
@@ -63,16 +69,16 @@ export const ProjectsManager: React.FC = () => {
                 </div>
               )}
             </div>
-            
+
             <div className="p-4">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 {project.title}
               </h3>
-              
+
               <p className="text-gray-600 text-sm mb-3 line-clamp-2">
                 {project.description}
               </p>
-              
+
               <div className="flex flex-wrap gap-1 mb-3">
                 {project.technologies.slice(0, 3).map((tech, index) => (
                   <span
@@ -88,7 +94,7 @@ export const ProjectsManager: React.FC = () => {
                   </span>
                 )}
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <div className="flex space-x-2">
                   {project.githubUrl && (
@@ -114,7 +120,7 @@ export const ProjectsManager: React.FC = () => {
                     </a>
                   )}
                 </div>
-                
+
                 <div className="flex space-x-2">
                   <button
                     onClick={() => handleEdit(project)}
