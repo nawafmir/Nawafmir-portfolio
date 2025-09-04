@@ -19,7 +19,7 @@ export const getPersonalInfo = (): PersonalInfo => {
     name: 'Nawafmir',
     title: 'Full Stack Developer',
     bio: 'Passionate developer with expertise in modern web technologies. I love creating beautiful, functional applications that solve real-world problems.',
-    profileImage: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+    profileImage: 'https://i.imgur.com/Nt2q53X_d.jpeg?maxwidth=520&shape=thumb&fidelity=high',
     email: 'nawafmir@example.com',
     github: 'https://github.com/nawafmir',
     linkedin: 'https://linkedin.com/in/nawafmir',

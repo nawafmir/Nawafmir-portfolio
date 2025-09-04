@@ -90,7 +90,7 @@ export const PersonalInfoForm: React.FC = () => {
                 className="w-16 h-16 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600"
                 onError={(e) => {
                   console.error("Image failed to load:", formData.profileImage);
-                  e.currentTarget.src = "https://via.placeholder.com/150";
+                  e.currentTarget.src = "https://i.imgur.com/Nt2q53X_d.jpeg?maxwidth=520&shape=thumb&fidelity=high";
                 }}
                 loading="eager"
               />
